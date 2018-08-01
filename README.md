@@ -1,25 +1,24 @@
-**************Project Tittle: University Loan Verification Management System******************
+**************Project Tittle: University Loan Verification Management System**************
 
 
 Required Packages to install for Linux environment
-_____________________________________________________________________________
-Package Name                       |   How To Install                       |
-___________________________________|________________________________________|
-                                   |                                        |
-1. Python 3.6                      |  sudo apt-get install python3.6        |
-                                   |                                        |
-2. PostgreSQL database             |  sudo apt-get install postgresql       |
-                                   |                                        |
-3. Python3-pip                     |  sudo apt-get install python3-pip      |
-                                   |                                        |
-4. Django 2.0.4                    |  pip3 install django                   |
-                                   |                                        |
-5. Pyexcel                         |  pip3 install pyexcel                  |
-                                   |                                        |
-6. Python Pillow (PIL)             |  pip3 install pillow                   |
-                                   |                                        |
-7. Matplotlib                      |  pip3 install matplotlib               |
-___________________________________|________________________________________|
+
+Package Name                          How To Install
+                                                                           
+1. Python 3.6                        sudo apt-get install python3.6 
+                                                                           
+2. PostgreSQL database               sudo apt-get install postgresql 
+                                                                           
+3. Python3-pip                       sudo apt-get install python3-pip
+                                                                           
+4. Django 2.0.4                      pip3 install django
+                                                                           
+5. Pyexcel                           pip3 install pyexcel
+                                                                           
+6. Python Pillow (PIL)               pip3 install pillow 
+                                                                           
+7. Matplotlib                        pip3 install matplotlib
+
 
 
 Database Configurations 
@@ -57,18 +56,16 @@ Execute the following command to run ulvms application on port 8000
 Now you will be able to access the application to any local web browser through 'http://localhost:8000' address
 
 User the following credentials to log in
-_____________________________________________________________________________________
-Username                  |   Password                 |   Role                     |
-__________________________|____________________________|____________________________|
-                          |                            |                            |
-1.  uloanofficer          |  staffuserone              |  University Loan Officer   |
-                          |                            |                            |
-2.  lbloanofficer         |  staffusertwo              |  Loanboard officer         |
-                          |                            |                            |
-3.  2015-04-02571         |  studentpassword           |  Student                   |
-                          |                            |                            |
-__________________________|____________________________|____________________________|
 
+Username,                     Password,                    Role
+
+                                                                                  
+1.  uloanofficer,           staffuserone,               University Loan Officer 
+                                                                                  
+2.  lbloanofficer,          staffusertwo,               Loanboard officer 
+                                                                                  
+3.  2015-04-02571,          studentpassword,            Student 
+                                                                                  
 
 To sign by using barcode you need to plug barcode reader on your computer usb port and run 
 the program in barcode_reader directory as follows 
