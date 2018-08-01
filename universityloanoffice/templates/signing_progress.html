@@ -1,0 +1,129 @@
+{% extends "loanofficer_base.html" %}
+
+{% block title %}Signing Progress {% endblock %}
+
+{% block content %}
+
+  <style media="screen">
+  .file-contents{
+    margin: 20px 10px 0 10px;
+  }
+  table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    border-width: 0;
+    border-bottom-width: 1px;
+    border-style: solid;
+    border-color: #02cccc;
+    width: 100%;
+  }
+
+  td {
+    text-align: left;
+    padding: 0 8px 0 8px;
+  }
+
+  th{
+    text-align: left;
+    padding: 10px 0 10px 8px;
+  }
+
+  tr:nth-child(odd) {
+    background-color: #dddddd;
+  }
+
+  td span{
+      cursor: pointer;
+      display: block;
+      padding: 8px;
+  }
+  .warning{
+    margin-top: 50px;
+  }
+  .message{
+    padding: 25px 0 20px 0;
+    background-color: gray;
+    margin: 0 auto 0 auto;
+    width: 70%;
+    border-width: 0;
+    border-radius: 5px;
+    text-align: center;
+  }
+</style>
+
+{% include "datavisualization.html" %}
+
+<div class="file-contents">
+<table id="tbl">
+  {% if data %}
+  <tr style="background-color: #02cccc;">
+    <th>First Name</th>
+    <th>Last Name</th>
+    <th>Registration No</th>
+    <th style="text-align: center;">Signature status</th>
+  </tr>
+  {% for row in data %}
+  <tr>
+    <td>{{row.signature_id.first_name}}</td>
+    <td>{{row.signature_id.last_name}}</td>
+    <td>{{row.student.reg_no}}</td>
+    {% if row.status == 'signed' %}
+    <script type="text/javascript"> setInterval(function(){ send_areq("{{row.student.reg_no}}"); }, 2000); </script>
+    <td style="text-align: center;"> <span onclick="send_toggle_req( '{{row.student.reg_no}}' );" id="{{row.student.reg_no}}" > <i class="fa fa-check" style="color: green;"></i> </span> </td>
+    {% else %}
+    <script type="text/javascript"> setInterval(function(){ send_areq("{{row.student.reg_no}}"); }, 2000);  </script>
+    <td style="text-align: center;"> <span onclick="send_toggle_req( '{{row.student.reg_no}}' );" id="{{row.student.reg_no}}" > <i class="far fa-square" style="color: gray;"></i> </span> </td>
+    {% endif %}
+  </tr>
+  {% endfor %}
+</table>
+</div>
+{% with page=data %}
+{% include "pagination.html" %}
+{% endwith %}
+{% else %}
+<div class="warning">
+  <div class="message" > Sorry, There is no signing session currently!.. </div>
+</div>
+{% endif %}
+<script type="text/javascript">
+     function send_areq(element){
+     $.ajax(
+       {
+         type:"GET",
+         url: '/university/ajax-get-status/'+element,
+         data:{
+           reg_no: element,
+         },
+         success: function( data, status )
+         {
+             if(status=='success'){
+               if(data == 'signed' ){
+                   $("#"+element).html('<i class="fa fa-check" style="color: green;"> </i>');
+               }
+               else{
+                   $("#"+element).html('<i class="far fa-square" style="color: gray;"> </i>');
+               }
+             }
+         }
+      });
+     }
+
+     function send_toggle_req(reg_no){
+     $.ajax(
+       {
+         type:"GET",
+         url: '/university/toggle-signing-status/'+reg_no,
+         data:{
+         },
+         success: function( data, status )
+         {
+             if(status=='success'){
+
+             }
+         }
+      });
+     }
+  </script>
+
+{% endblock %}

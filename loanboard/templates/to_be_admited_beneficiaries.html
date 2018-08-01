@@ -1,0 +1,117 @@
+{% extends "loanboard_base.html" %}
+
+{% block title %}Beneficiaries{% endblock %}
+
+{% block content %}
+
+  <style media="screen">
+  .file-contents{
+    margin: 20px 10px 0 10px;
+  }
+  table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    border-width: 0;
+    border-bottom-width: 1px;
+    border-style: solid;
+    border-color: #02cccc;
+    width: 100%;
+  }
+
+  td {
+    text-align: left;
+    padding: 8px 8px 8px 8px;
+  }
+
+  th{
+    text-align: left;
+    padding: 10px 0 10px 8px;
+  }
+
+  tr:nth-child(odd) {
+    background-color: #dddddd;
+  }
+
+  td span{
+      cursor: pointer;
+      display: block;
+      padding: 8px;
+  }
+  .actions{
+    text-align: center;
+    margin-top: 20px;
+  }
+  .actions ul{
+    margin: 0;
+    padding: 0;
+    text-align: center;
+  }
+  .actions li{
+    list-style: none;
+    margin: 0 20px 0 20px;
+    width: 180px;
+    border-width: 0;
+    border-radius: 0;
+    overflow: hidden;
+    transition: background-color;
+    transition-duration: .4s;
+    display: inline-block;
+    background-color: #595959;
+  }
+  .actions li:hover{
+    background-color:  #02cccc;
+  }
+  .actions li a{
+    text-decoration: none;
+    color: #eeee;
+    display: block;
+    padding: 15px 0 15px 0;
+  }
+  .warning{
+    margin-top: 50px;
+  }
+  .message{
+    padding: 25px 0 20px 0;
+    background-color: gray;
+    margin: 0 auto 0 auto;
+    width: 70%;
+    border-width: 0;
+    border-radius: 5px;
+    text-align: center;
+  }
+</style>
+{% if beneficiaries %}
+<div class="actions">
+  <ul>
+    <li> <a href="/loanboard/import-beneficiaries"> Send to university </a> </li>
+  </ul>
+</div>
+<div class="file-contents">
+<table id="tbl">
+  <tr style="background-color: #02cccc;">
+    <th>First Name</th>
+    <th>Last Name</th>
+    <th style="padding-left: 30px;">F4 Index No</th>
+    <th style="text-align: center;">Status</th>
+  </tr>
+  {% for row in beneficiaries %}
+  <tr>
+    <td>{{row.first_name}}</td>
+    <td>{{row.last_name}}</td>
+    <td>{{row.form_four_index_no}}</td>
+    <td style="text-align: center;">{{row.status}}</td>
+  </tr>
+  {% endfor %}
+</table>
+</div>
+{% with page=beneficiaries %}
+{% include "pagination.html" %}
+{% endwith %}
+
+{% else %}
+<div class="warning">
+  <div class="message" > Sorry, There are no beneficiaries to import!.. </div>
+</div>
+{% endif %}
+
+{% endblock %}

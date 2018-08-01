@@ -1,0 +1,158 @@
+{% extends "loanboard_base.html" %}
+
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+<style media="screen">
+
+  .widget{
+    margin: 20px 20px 50px 20px;
+    min-height: 85vh;
+    min-width: 350px;
+    background-color: #595959;
+    overflow: hidden;
+    display: inline-block;
+    float: left;
+  }
+  .header i{
+    float: right;
+    font-size: 1.2em;
+    position: relative;
+    bottom: 0;
+    right: 10px;
+    color: #eeee;
+  }
+  .header{
+    color: #eeee;
+    display: block;
+    font-size: 1.1em;
+    text-align: left;
+    padding: 17px 0 17px 10px;
+    background-color: #494949;
+  }
+  .widget ul {
+    padding: 0;
+    margin: 20px 0 0 20px;
+  }
+  .widget ul li{
+    text-align: left;
+    margin: 5px 0 0 0;
+    list-style: none;
+  }
+  .widget li a{
+    text-decoration: none;
+    color: #eeee;
+    font-size: 1.05em;
+    display: block;
+    padding: 10px 0 10px 0;
+    transition: color;
+    transition-duration: 1s;
+    font-family: 'Raleway', sans-serif;
+  }
+  .widget li a:hover{
+    color: #eeee;
+  }
+  .widget .list-st{
+    position: relative;
+    bottom: 3px;
+    color: gray;
+    font-size: 10px;
+    font-weight: bold;
+  }
+  .data-summary{
+    display: inline-block;
+    float: left;
+  }
+</style>
+{% with list_style="⭘"  solid_list_style="▶▷" %}
+  <div class="widget">
+    <span class="header">Actions Menu <i class="fa fa-list"></i></span>
+    <ul>
+      <li><a href="/loanboard/active-beneficiaries"><span class="list-st">{{list_style}}</span> Send names for signing</a></li>
+      <li><a href="/loanboard/unadmited-beneficiaries"><span class="list-st">{{list_style}}</span> Import loan beneficiaries</a></li>
+      <li><a href="/loanboard/view-beneficiaries"><span class="list-st">{{list_style}}</span> View all loan beneficiaries</a></li>
+      <li>
+        {% if notification %}
+        <a href="/loanboard/notifications"><span class="list-st">{{list_style}}</span> Notifications <i class="fas fa-bell" > </i> <sup id="ntfs">{{notification}}</sup> </a>
+        {% endif %}
+      </li>
+    </ul>
+  </div>
+
+  <div class="data-summary">
+    <a id="beneficiarypiechartimg" href="" download="beneficiary_piechart_img.png"> <div id="piechart"></div> </a>
+    <a id="barchartimg" href="" download="barchartimg.png"> <div id="barchart"></div> </a>
+  </div>
+  <script type="text/javascript">
+  google.charts.load('current', {'packages':['corechart']});
+  google.charts.setOnLoadCallback(drawPieChart);
+
+  function drawPieChart() {
+    var data = google.visualization.arrayToDataTable([
+    ['Task', 'Hours per Day'],
+    ['Continuous', {{continuous}}],
+    ['Discontinued', {{discontinued}}],
+    ['Postpone', {{postponed}}],
+    ['Complete', {{completed}}],
+  ]);
+
+  var options = {
+       title: 'Loan Beneficiary Pie chart',
+       pieHole: 0.4,
+       width: 900,
+       height: 330,
+       slices: {0: {color: '#5cc44e'}, 1:{color: '#f44242'}, 2:{color: 'orange'}, 3:{color: 'gray'} },
+       titleTextStyle: {
+         color: '#212121',
+         fontName: "'Comfortaa', cursive",
+         fontSize: 16,
+         bold: false
+       }
+  };
+  var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+  chart.draw(data, options);
+  google.visualization.events.addListener(chart, 'ready', function () {
+      var imgUri = chart.getImageURI();
+      document.getElementById('beneficiarypiechartimg').href = imgUri;
+  });
+  }
+  </script>
+
+  <script language = "JavaScript">
+     google.charts.load('current', {'packages':['corechart']});
+     google.charts.setOnLoadCallback(function(){ drawBarChart({{continuous}}, {{discontinued}}, {{postponed}}, {{completed}}); });
+     function drawBarChart(continuous, discontinued, postponed, completed) {
+        var data = google.visualization.arrayToDataTable([
+           ['Status', 'State', { role: 'style' }, { role: 'annotation' }],
+           ['Continuous',  continuous, 'color: #5cc44e', continuous],
+           ['Discontinued', discontinued, 'color: #f44242', discontinued],
+           ['Postponed', postponed, 'color: orange', postponed],
+           ['Completed', completed, 'color: gray', completed],
+        ]);
+
+        var options = {
+             title: 'Loan Beneficiary Bar chart',
+             width: 900,
+             height: 300,
+             colors: ['#02cccc'],
+             legend: { position: 'none', maxLines: 3 },
+             titleTextStyle: {
+               color: '#212121',
+               fontName: "'Comfortaa', cursive",
+               fontSize: 16,
+               bold: false
+             }
+           };
+
+        var chart = new google.visualization.ColumnChart(document.getElementById('barchart'));
+        chart.draw(data, options);
+        google.visualization.events.addListener(chart, 'ready', function () {
+            var imgUri = chart.getImageURI();
+            document.getElementById('barchartimg').href = imgUri;
+        });
+     }
+  </script>
+
+{% endwith %}
+
+{% endblock %}

@@ -1,0 +1,170 @@
+{% if data %}
+<style media="screen">
+.data-summary{
+  margin: 10px auto 0 auto;
+  animation-name: show-data-summary;
+  animation-duration: 2s;
+  animation-delay: 1s;
+  animation-iteration-count: 1;
+  opacity: 0;
+  animation-fill-mode: forwards;
+  display: inline-block;
+  width: 100%;
+}
+@keyframes show-data-summary {
+  0%{opacity: 0}
+  100%{opacity: 1}
+}
+#piechart, #barchart{
+  display: inline-block;
+}
+#piechartimg, #barchartimg{
+  display: inline-block;
+  width: 430px;
+  overflow: hidden;
+}
+.actions{
+  width: 430px;
+  display: inline-block;
+  margin: 0 auto 70px auto;
+}
+.actions ul{
+  margin: 0;
+  padding: 0;
+}
+.actions li{
+  text-align: center;
+  list-style: none;
+  margin: 20px 0 20px 0;
+  width: 200px;
+  border-width: 0;
+  line-height: 3;
+  border-radius: 0;
+  overflow: hidden;
+  transition: background-color;
+  transition-duration: .7s;
+  float: right;
+}
+.actions  li:nth-child(odd) {
+    background-color: #02cccc;
+  }
+.actions  li:nth-child(even) {
+    background-color: gray;
+  }
+.actions li a{
+  text-decoration: none;
+  color: #eeee;
+  display: block;
+}
+.actions li:nth-child(odd):hover{
+  background-color:  #17A2B8;
+}
+.actions li:nth-child(even):hover{
+  background-color:  #17A2B8;
+}
+#end-signing-session:hover{
+  background-color: #F5746F;
+}
+</style>
+
+<div class="data-summary">
+  <a id="piechartimg" href="" download="piechartimg.png"> <div id="piechart"></div> </a>
+  <div class="actions">
+    <ul>
+      <li><a href="/university/export-signed">Export Signed</a></li>
+      <li><a href="/university/export-unsigned">Export Unsigned</a></li>
+      <li id="end-signing-session"><a href="/university/end-signing-session">End Signing Session</a></li>
+      <li><a href="/university/export-all">Export All</a></li>
+    </ul>
+  </div>
+  <a id="barchartimg" href="" download="barchartimg.png"> <div id="barchart"></div> </a>
+</div>
+
+<script type="text/javascript">
+     setInterval(send_vreq, 2000);
+     function send_vreq(){
+     $.ajax(
+       {
+         type:"GET",
+         url: "/university/ajax-get-signing-progress",
+         data:{
+         },
+         success: function( data, status )
+         {
+             if(status=='success'){
+               data=JSON.parse(data);
+               google.charts.setOnLoadCallback(function(){ drawBarChart( data['signed_num'], data['unsigned_num'] ); });
+               google.charts.setOnLoadCallback(function(){ drawPieChart( data['signed_num'], data['unsigned_num'] ); });
+             }
+         }
+      });
+     }
+  </script>
+
+<script type="text/javascript">
+google.charts.load('current', {'packages':['corechart']});
+google.charts.setOnLoadCallback(function(){ drawPieChart({{signed_num}}, {{unsigned_num}}); });
+function drawPieChart(signed_num, unsigned_num) {
+  var data = google.visualization.arrayToDataTable([
+  ['Task', 'Hours per Day'],
+  ['Signed', signed_num],
+  ['Unsigned', unsigned_num],
+]);
+
+var options = {
+     title: 'Pie Chart Signing progress summary',
+     pieHole: 0.4,
+     width: 550,
+     height: 300,
+     slices: {0: {color: '#02cccc'}, 1:{color: 'gray'} },
+     titleTextStyle: {
+       color: '#212121',
+       fontName: "'Comfortaa', cursive",
+       fontSize: 16,
+       bold: false
+     }
+};
+
+var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+chart.draw(data, options);
+google.visualization.events.addListener(chart, 'ready', function () {
+    var imgUri = chart.getImageURI();
+    document.getElementById('piechartimg').href = imgUri;
+});
+
+}
+</script>
+
+<script language = "JavaScript">
+   google.charts.load('current', {'packages':['corechart']});
+   google.charts.setOnLoadCallback(function(){ drawBarChart({{signed_num}}, {{unsigned_num}}); });
+   function drawBarChart(signed_num, unsigned_num) {
+      var data = google.visualization.arrayToDataTable([
+         ['Status', 'Signing', { role: 'style' }, { role: 'annotation' }],
+         ['Signed',  signed_num, 'color: #02cccc', signed_num],
+         ['Unsigned', unsigned_num, 'color: gray', unsigned_num],
+      ]);
+
+      var options = {
+           title: 'Bar Chart Signing progress summary',
+           width: 550,
+           height: 300,
+           colors: ['#02cccc'],
+           legend: { position: 'none', maxLines: 3 },
+           titleTextStyle: {
+             color: '#212121',
+             fontName: "'Comfortaa', cursive",
+             fontSize: 16,
+             bold: false
+           }
+         };
+
+      var chart = new google.visualization.BarChart(document.getElementById('barchart'));
+      chart.draw(data, options);
+      google.visualization.events.addListener(chart, 'ready', function () {
+          var imgUri = chart.getImageURI();
+          document.getElementById('barchartimg').href = imgUri;
+      });
+   }
+</script>
+{% endif %}

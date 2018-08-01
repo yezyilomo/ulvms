@@ -1,0 +1,73 @@
+{% extends "loanofficer_base.html" %}
+
+{% block title %} Notifications {% endblock %}
+
+{% block content %}
+
+<style media="screen">
+.configuration{
+  margin: 30px;
+}
+.configuration .header{
+  font-size: 1.1em;
+  font-weight: 600;
+  margin-left: 5px;
+  margin-bottom: 2px;
+  font-family: 'Raleway', sans-serif;
+}
+.current_txt{
+     height: 150px;
+     width: 50%;
+     border: 0 solid gray;
+     border-radius: 5px;
+     background-color: #eeee;
+     margin-bottom: 50px;
+     padding: 10px;
+     font-family: 'Raleway', sans-serif;
+ }
+ .new_txt{
+
+ }
+ .text_area{
+   background-color: #eeee;
+   border: 2px solid #eeee;
+   width: 50%;
+   border-radius: 5px;
+   font-family: 'Raleway', sans-serif;
+   padding: 10px;
+ }
+ .text_area:focus{
+   background-color: white;
+ }
+ .save_button{
+   display: block;
+   border: 0 solid gray;
+   background-color: gray;
+   height: 40px;
+   width: 120px;
+   margin-top: 30px;
+   border-radius: 5px;
+ }
+ .save_button:hover{
+   background-color: #17A2B8;
+   cursor: pointer;
+ }
+</style>
+<div class="configuration">
+  <span class="header">Current </span>
+   <div class="current_txt">
+     {% autoescape off %}
+     {{current_content}}
+     {% endautoescape %}
+   </div>
+
+   <span class="header">New</span>
+   <div class="new_txt">
+     <form class="" action="/university/configure-web-notf" method="post"> {% csrf_token %}
+       <textarea class="text_area" name="web_notification" rows="7" cols="80" autofocus></textarea>
+       <input class="save_button" type="submit" name="" value="Save">
+     </form>
+   </div>
+</div>
+
+{% endblock %}

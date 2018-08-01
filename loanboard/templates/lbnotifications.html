@@ -1,0 +1,55 @@
+{% extends "loanboard_base.html" %}
+
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+
+  <style media="screen">
+  .file-list{
+    margin: 20px 50px 0 50px;
+  }
+  table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  td, th {
+    border: 1px solid gray;
+    text-align: left;
+    padding: 8px;
+  }
+
+  tr:nth-child(odd) {
+    background-color: #dddddd;
+  }
+
+  td a{
+      color: #18BC9C;
+      text-decoration: none;
+  }
+
+  </style>
+  <div class="file-list">
+    <div class="" style="text-align: center; margin: 10px 0 10px 0; font-size: 1.1em;">
+       Beneficiary Information received
+    </div>
+    <table>
+      <tr style="background-color: gray;">
+        <th>File Name</th>
+        <th style="text-align: center;">Action</th>
+      </tr>
+      {% for fl in files reversed %}
+      <tr>
+        <td><a href="/loanboard/file/{{fl.name}}">{{ fl.name }}</a></td>
+        <td style="text-align: center;"><a href="/loanboard/view-changes/{{fl.name}}">Merge</a></td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+
+  {% with page=files %}
+  {% include "pagination.html" %}
+  {% endwith %}
+
+{% endblock %}

@@ -1,0 +1,115 @@
+{% extends "loanofficer_base.html" %}
+
+{% block title %} Loan Officer {% endblock %}
+
+{% block content %}
+<style media="screen">
+  .aggregate-info{
+    margin-top: 30px;
+    text-align: center;
+  }
+  .aggregate-info div{
+    margin: 0 20px 10px 20px;
+    height: 210px;
+    display: inline-block;
+    width: 400px;
+    background-color: #595959;
+    overflow: hidden;
+  }
+  .aggregate-info .header i{
+    float: right;
+    font-size: 1.2em;
+    margin-right: 10px;
+    color: #eeee;
+  }
+  .aggregate-info .header{
+    color: #eeee;
+    display: block;
+    font-size: 1.1em;
+    text-align: left;
+    padding: 17px 0 17px 10px;
+    background-color: #494949;
+  }
+  .widget ul {
+    padding: 0;
+    margin: 20px 0 0 20px;
+  }
+  .widget ul li{
+    text-align: left;
+    margin: 5px 0 0 0;
+    list-style: none;
+  }
+  .widget li a{
+    text-decoration: none;
+    color: #eeee;
+    font-size: 1.05em;
+    display: block;
+    padding: 10px 0 10px 0;
+    transition: color;
+    transition-duration: 1s;
+    font-family: 'Raleway', sans-serif;
+  }
+  .widget li a:hover{
+    color: #eeee;
+  }
+  .widget .list-st{
+    position: relative;
+    bottom: 3px;
+    color: gray;
+    font-size: 10px;
+    font-weight: bold;
+  }
+  .hseparator{
+    width: 98%;
+    height: 1px;
+    border-color: #dddddd;
+    border-width: 1px 0 0 0;
+    border-style: solid;
+  }
+
+</style>
+
+<div class="aggregate-info">
+
+{% with list_style="⭘"  solid_list_style="▶▷" %}
+  <div class="widget">
+    <span class="header">About Loan Beneficiaries <i class="fa fa-list-ul"></i></span>
+    <ul>
+      <li><a href="/university/aggregate-info/all"><span class="list-st">{{list_style}}</span> Send updates to Loanboard</a></li>
+      <!-- <li><a href="/university/inital-import-status"><span class="list-st">{{list_style}}</span>
+            Import new loan beneficiaries
+            {% if initial_notfication %} <i class="fas fa-bell" style="color: orange; margin-left: 10px;"></i> {% endif %}
+          </a>
+      </li> -->
+      <li>
+        <a href="/university/manage-loanbeneficiaries"> <span class="list-st">{{list_style}}</span>
+        Manage Loan beneficiaries
+        {% if manage_notfication %}
+          <i class="fas fa-bell" style="color: orange; margin-left: 10px;"></i>
+        {% endif %}
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <div class="widget">
+    <span class="header">About signing <i class="fa fa-edit"></i></span>
+    <ul>
+      <li><a href="/university/notifications"><span class="list-st">{{list_style}}</span> Create signing session</a></li>
+      <li><a href="/university/signing-progress"><span class="list-st">{{list_style}}</span> View signing progress</a></li>
+    </ul>
+  </div>
+
+  <div class="widget">
+    <span class="header">Notification Configurations <i class="fas fa-bell"></i></span>
+    <ul>
+      <li><a href="/university/email-configuration"> <span class="list-st">{{list_style}}</span> Configure E-mails</a> </li>
+      <li><a href="/university/web-notf-configuration"> <span class="list-st">{{list_style}}</span> Configure Web Notification</a> </li>
+    </ul>
+  </div>
+{% endwith %}
+</div>
+{% include "datavisualization.html" %}
+<hr class="hseparator">
+{% include "beneficiary_statistics.html" %}
+{% endblock %}

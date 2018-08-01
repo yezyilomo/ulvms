@@ -1,0 +1,181 @@
+{% extends "loanofficer_base.html" %}
+
+{% block title %} Loan Officer {% endblock %}
+
+{% block content %}
+
+  <style media="screen">
+  .beneficiary-data{
+    margin: 20px 10px 0 10px;
+  }
+  table {
+    width: 100%;
+  }
+  td {
+    text-align: left;
+    padding: 8px;
+  }
+  th{
+    text-align: left;
+    padding: 10px 0 10px 8px;
+  }
+  tr:nth-child(odd) {
+    background-color: #dddddd;
+  }
+  td a{
+      color: #18BC9C;
+  }
+
+  .actions{
+    text-align: center;
+    margin-top: 20px;
+  }
+  .actions ul{
+    margin: 0;
+    padding: 0;
+    text-align: center;
+  }
+  .actions li{
+    list-style: none;
+    margin: 0 20px 0 20px;
+    width: 180px;
+    border-width: 0;
+    border-radius: 4px;
+    overflow: hidden;
+    transition: background-color;
+    transition-duration: .4s;
+    display: inline-block;
+    background-color: #595959;
+  }
+  .actions li:hover{
+    background-color:  #02cccc;
+  }
+  .actions li a{
+    text-decoration: none;
+    color: #eeee;
+    display: block;
+    padding: 15px 0 15px 0;
+  }
+  .warning{
+    margin-top: 50px;
+  }
+  .message{
+    padding: 25px 0 20px 0;
+    background-color: gray;
+    margin: 0 auto 0 auto;
+    width: 70%;
+    border-width: 0;
+    border-radius: 5px;
+    text-align: center;
+  }
+
+  .modal {
+      display: none;
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgb(0,0,0);
+      background-color: rgba(0,0,0,0.6);
+  }
+
+  .modal-content {
+      background-color: white;
+      margin: auto;
+      padding: 50px 50px 0 50px;
+      margin-top: 250px;
+      border: 0 solid #888;
+      width: 300px;
+      text-align: center;
+  }
+  .msg{
+    font-size: 1.1em;
+  }
+  .yes, .no{
+    text-decoration: none;
+    color: #aaaaaa;
+    font-size: 28px;
+    font-weight: bold;
+    padding: 0 20px 0 20px;
+    line-height: 3;
+  }
+  .yes:hover, .yes:focus, .no:hover, .no:focus {
+      color: #000;
+      text-decoration: none;
+      cursor: pointer;
+  }
+  </style>
+
+  <div class="actions-panel">
+    <div class="actions">
+      <ul>
+        <li><a id="myBtn" style="cursor: pointer;"> Send to Loan board </a></li>
+        <li><a href="/university/aggregate-info/all">View All</a></li>
+        <li><a href="/university/aggregate-info/continuous">View Continuous</a></li>
+        <li><a href="/university/aggregate-info/discontinued">View Discontinued</a></li>
+        <li><a href="/university/aggregate-info/postponed">View Postponed</a></li>
+      </ul>
+    </div>
+    <div id="myModal" class="modal">
+      <div class="modal-content">
+        <div class="msg">
+          Are you sure you want to send these names?
+        </div>
+        <span><span class="yes"><a class="yes" href="/university/send-updates">Yes</a></span></span>
+        <span><span class="no">No</span></span>
+      </div>
+    </div>
+    <script type="text/javascript">
+    var modal = document.getElementById('myModal');
+    var btn = document.getElementById("myBtn");
+    var span = document.getElementsByClassName("no")[0];
+    btn.onclick = function() {
+        modal.style.display = "block";
+    }
+    span.onclick = function() {
+        modal.style.display = "none";
+    }
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+    </script>
+  </div>
+{% if beneficiaries %}
+  <div class="beneficiary-data">
+    <table>
+      <tr style="background-color: #02cccc;">
+        <th>First Name</th>
+        <th>Middle Name</th>
+        <th>Last Name</th>
+        <th>Registration Number</th>
+        <th>Form4 Index Number</th>
+        <th>Status</th>
+      </tr>
+      {% for row in beneficiaries %}
+      <tr>
+        <td>{{row.first_name}}</td>
+        <td>{{row.middle_name}}</td>
+        <td>{{row.last_name}}</td>
+        <td>{{row.reg_no}}</td>
+        <td>{{row.form_four_index_no}}</td>
+        <td>{{row.status}}</td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+
+{% with page=beneficiaries %}
+{% include "pagination.html" %}
+{% endwith %}
+
+{% else %}
+<div class="warning">
+  <div class="message" > Sorry, There is no record for your search!.. </div>
+</div>
+{% endif %}
+{% endblock %}

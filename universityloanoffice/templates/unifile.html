@@ -1,0 +1,47 @@
+{% extends "loanofficer_base.html" %}
+
+{% block title %} File Contents {% endblock %}
+
+{% block content %}
+
+  <style media="screen">
+  .file-contents{
+    margin: 20px 10px 0 10px;
+  }
+  table {
+    width: 100%;
+  }
+
+  td, th {
+    border: 0 solid gray;
+    text-align: center;
+    padding: 8px;
+  }
+
+  tr:nth-child(odd) {
+    background-color: #dddddd;
+  }
+
+  td a{
+      color: #18BC9C;
+  }
+  </style>
+
+  <div class="file-contents">
+    <table>
+      <tr style="background-color: #02cccc;">
+        {% for head in data.0 %}
+        <th>{{ head }}</th>
+        {% endfor %}
+      </tr>
+      {% for row in data|slice:"1:" %}
+      <tr>
+        {% for field in row %}
+        <td>{{field}}</td>
+        {% endfor %}
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+
+{% endblock %}

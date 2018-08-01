@@ -1,0 +1,31 @@
+{% extends "loanofficer_base.html" %}
+
+{% block title %} Loan Officer {% endblock %}
+
+{% block content %}
+<style media="screen">
+  .success_message{
+    margin: 100px 0 0 0;
+    text-align: center;
+    font-size: 1.3em;
+  }
+  #cloud{
+    font-size: 10em;
+  }
+  #tick{
+    font-size: 5em;
+    color: #02cccc;
+    position: relative;
+    bottom: 153px;
+  }
+</style>
+
+<div class="message">
+  <div class="success_message">
+    <i id="cloud" class="fas fa-cloud"></i>
+    <div>The file is sent successfully!.</div>
+    <i id="tick" class="fas fa-check"></i>
+
+  </div>
+</div>
+{% endblock %}

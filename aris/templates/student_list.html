@@ -1,0 +1,146 @@
+{% extends "loanofficer_base.html" %}
+
+{% block title %} Loan Officer {% endblock %}
+
+{% block content %}
+<style media="screen">
+.header{
+  text-align: center;
+  margin-top: 20px;
+  font-size: 1.1em;
+}
+.beneficiary-data{
+  margin: 5px 10px 0 10px;
+}
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  border-width: 0;
+  border-bottom-width: 1px;
+  border-style: solid;
+  border-color: #02cccc;
+  width: 100%;
+}
+
+td {
+  text-align: left;
+  padding: 8px;
+}
+
+th{
+  text-align: left;
+  padding: 10px 0 10px 8px;
+}
+
+tr:nth-child(odd) {
+  background-color: #dddddd;
+}
+
+td a{
+    color: #18BC9C;
+}
+
+</style>
+{% if students %}
+
+<div class="header">Aris Student Information</div>
+<div class="beneficiary-data">
+  <table>
+    <tr style="background-color: #02cccc;">
+      <th>First Name</th>
+      <th>Last Name</th>
+      <th>Registration Number</th>
+      <th>Form4 Index Number</th>
+      <th>Status</th>
+    </tr>
+    {% for row in students %}
+    <tr>
+      <td>{{row.first_name}}</td>
+      <td>{{row.last_name}}</td>
+      <td>{{row.reg_no}}</td>
+      <td>{{row.form_four_index_no}}</td>
+      <script type="text/javascript"> setInterval(function(){ get_status("{{row.reg_no}}"); }, 100000); </script>
+      <td style="cursor: pointer;" onclick="toggle_status( '{{row.reg_no}}' );" id="{{row.reg_no}}">
+        <span style="color:
+        {% if row.status == 'continuous' %} green;
+        {% elif row.status == 'postponed' %} gray;
+        {% elif row.status == 'completed' %} orange;
+        {% elif row.status == 'discontinued' %} red;
+        {% else %}
+        {% endif %}
+        ">
+        {{row.status}} </span>
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+{% with page=students %}
+{% include "pagination.html" %}
+{% endwith %}
+<script type="text/javascript">
+     function get_status(element){
+     $.ajax(
+       {
+         type:"GET",
+         url: '/aris/get-status/',
+         data:{
+           reg_no: element,
+         },
+         success: function(data, status )
+         {
+             if(status=='success'){
+               if(data == 'continuous' ){
+                   $("#"+element).html('<span style="color: green;">'+data+'</span>');
+               }
+               else if(data == 'discontinued' ){
+                   $("#"+element).html('<span style="color: red;">'+data+'</span>');
+               }
+               else if(data == 'postponed' ){
+                   $("#"+element).html('<span style="color: gray;">'+data+'</span>');
+               }
+               else if(data == 'completed' ){
+                   $("#"+element).html('<span style="color: orange;">'+data+'</span>');
+               }
+               else{
+                   $("#"+element).html('<span style="color: gray;">'+data+'</span>');
+               }
+             }
+         }
+      });
+     }
+
+     function toggle_status(reg_n){
+     $.ajax(
+       {
+         type:"GET",
+         url: '/aris/toggle-status/',
+         data:{
+           reg_no: reg_n,
+         },
+         success: function( data, status )
+         {
+             if(status=='success'){
+               if(data == 'continuous' ){
+                   $("#"+reg_n).html('<span style="color: green;">'+data+'</span>');
+               }
+               else if(data == 'discontinued' ){
+                   $("#"+reg_n).html('<span style="color: red;">'+data+'</span>');
+               }
+               else if(data == 'postponed' ){
+                   $("#"+reg_n).html('<span style="color: gray;">'+data+'</span>');
+               }
+               else if(data == 'completed' ){
+                   $("#"+reg_n).html('<span style="color: orange;">'+data+'</span>');
+               }
+               else{
+                   $("#"+reg_n).html('<span style="color: gray;">'+data+'</span>');
+               }
+             }
+         }
+      });
+     }
+  </script>
+
+{% endif %}
+{% endblock %}

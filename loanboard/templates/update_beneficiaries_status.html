@@ -1,0 +1,103 @@
+{% extends "loanboard_base.html" %}
+
+{% block title %} Changes {% endblock %}
+
+{% block content %}
+<style media="screen">
+.actions{
+  text-align: center;
+  margin-top: 20px;
+}
+.actions ul{
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+.actions li{
+  list-style: none;
+  margin: 0 20px 0 20px;
+  width: 180px;
+  border-width: 0;
+  border-radius: 4px;
+  overflow: hidden;
+  transition: background-color;
+  transition-duration: .4s;
+  display: inline-block;
+  background-color: #595959;
+}
+.actions li:hover{
+  background-color:  #02cccc;
+}
+.actions li a{
+  text-decoration: none;
+  color: #eeee;
+  display: block;
+  padding: 15px 0 15px 0;
+}
+
+.beneficiary-data{
+  margin: 20px 10px 0 10px;
+}
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  border-width: 0;
+  border-bottom-width: 1px;
+  border-style: solid;
+  border-color: #02cccc;
+  width: 100%;
+}
+
+td {
+  text-align: left;
+  padding: 8px;
+}
+
+th{
+  text-align: left;
+  padding: 13px 0 13px 8px;
+}
+
+tr:nth-child(odd) {
+  background-color: #dddddd;
+}
+
+td a{
+    color: #18BC9C;
+}
+
+</style>
+{% if updates %}
+<div class="actions-panel">
+  <div class="actions">
+    <ul>
+      <li><a href="/university/loanbeneficiary/update-status/all">Update All</a></li>
+    </ul>
+  </div>
+</div>
+<div class="beneficiary-data">
+  <table>
+    <tr style="background-color: #02cccc;">
+      <th>First Name</th>
+      <th>Last Name</th>
+      <th>Registration Number</th>
+      <th>Form4 Index Number</th>
+      <th>Beneficiary Status</th>
+      <th>Current Status</th>
+      <th>Action</th>
+    </tr>
+    {% for row in updates %}
+    <tr>
+      <td>{{row.1.first_name}}</td>
+      <td>{{row.1.last_name}}</td>
+      <td>{{row.1.reg_no}}</td>
+      <td>{{row.0.form_four_index_no}}</td>
+      <td style="color: gray;">{{row.0.status}}</td>
+      <td style="color: green;">{{row.1.status}}</td>
+      <td><a href="/university/loanbeneficiary/update-status/{{row.0.reg_no}}">Update</a></td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+{% endif %}
+{% endblock %}

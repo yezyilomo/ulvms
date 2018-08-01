@@ -1,0 +1,48 @@
+{% extends "loanboard_base.html" %}
+
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+
+  <style media="screen">
+  .file-contents{
+    margin: 20px 10px 0 10px;
+  }
+  table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  td, th {
+    border: 1px solid gray;
+    text-align: left;
+    padding: 8px;
+  }
+
+  tr:nth-child(even) {
+    background-color: #dddddd;
+  }
+
+  td a{
+      color: #18BC9C;
+  }
+  </style>
+  <div class="file-contents">
+    <table>
+      <tr style="background-color: #02cccc;">
+        {% for head in data.0 %}
+        <th>{{ head }}</th>
+        {% endfor %}
+      </tr>
+      {% for row in data|slice:"1:" %}
+      <tr>
+        {% for field in row %}
+        <td>{{field}}</td>
+        {% endfor %}
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+
+{% endblock %}

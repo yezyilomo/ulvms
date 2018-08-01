@@ -1,0 +1,103 @@
+{% extends "loanofficer_base.html" %}
+
+{% block title %} Loan Officer {% endblock %}
+
+{% block content %}
+<style media="screen">
+.warning{
+  margin-top: 20px;
+}
+.message{
+  padding: 20px 0 20px 0;
+  background-color: gray;
+  margin: 0 auto 0 auto;
+  width: 70%;
+  border-width: 0;
+  border-radius: 5px;
+  text-align: center;
+  color: #FFC109;
+  font-size: 1.1em;
+}
+.message:hover{
+  background-color:  #17A2B8;
+  color: white;
+}
+.view-changes{
+  text-decoration: none;
+}
+.file-list{
+  margin: 0 20px 0 20px;
+}
+table {
+  width: 100%;
+}
+th{
+  text-align: left;
+  padding: 10px 0 10px 8px;
+  border-width: 0;
+}
+td{
+  border-width: 0;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(odd) {
+  background-color: #dddddd;
+}
+
+td a{
+    color: #18BC9C;
+    text-decoration: none;
+}
+.import-history{
+  margin: 20px 0 0 0;
+}
+.import-history .head{
+  display: block;
+  font-size: 1.1em;
+  text-align: center;
+}
+</style>
+
+{% if initial_num %}
+<div class="warning">
+    <div class="message" >
+      {% if initial_num == 1 %}
+         There is {{initial_num}} beneficiary file to import!..
+      {% else %}
+         There are {{initial_num}} beneficiary files to import!..
+      {% endif %}
+    </div>
+</div>
+{% else %}
+<div class="warning">
+    <div class="message" >
+      Everything is good, No beneficiaries to import!..
+    </div>
+</div>
+{% endif %}
+
+<div class="import-history">
+  <span class="head">Import history</span>
+  <div class="file-list">
+    <table>
+      <tr style="background-color: #02cccc;">
+        <th>File Name</th>
+        <th>Date Received</th>
+        <th style="text-align: right; padding-right: 20px;">Action</th>
+      </tr>
+      {% for fl in initial_files reversed %}
+      <tr>
+        <td> <i class="far fa-file-alt" style="fot-weight: 200;"> </i> <a href="/university/initial-file/{{ fl.file_obj.name }}">{{ fl.file_obj.name }}</a></td>
+        <td><a href="/university/initial-file/{{ fl.file_obj.name }}">{{ fl.time_sent}} </a></td>
+        <td style="text-align: right;"><a href="/university/import-initial-beneficiaries/{{fl.file_obj.name }}">
+          {% if fl.file_obj.name|slice:":4" == "New_" %} Import {% else %} Reimport {% endif %}
+        </a></td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+</div>
+
+{% endblock %}

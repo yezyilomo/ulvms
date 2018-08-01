@@ -1,0 +1,192 @@
+{% extends "loanofficer_base.html" %}
+
+{% block title %} Loan Officer {% endblock %}
+
+{% block content %}
+<style media="screen">
+.warning{
+  margin-top: 20px;
+}
+.message{
+  padding: 20px 0 20px 0;
+  background-color: gray;
+  margin: 0 auto 0 auto;
+  width: 70%;
+  border-width: 0;
+  border-radius: 5px;
+  text-align: center;
+  color: #FFC109;
+  font-size: 1.1em;
+}
+.message:hover{
+  background-color:  #17A2B8;
+  color: white;
+}
+.view-changes{
+  text-decoration: none;
+}
+.beneficiary-data{
+  margin: 20px 10px 0 10px;
+}
+table {
+  width: 100%;
+}
+td {
+  text-align: left;
+  padding: 8px;
+}
+th{
+  text-align: left;
+  padding: 10px 0 10px 8px;
+}
+tr:nth-child(odd) {
+  background-color: #dddddd;
+}
+td a{
+    color: #18BC9C;
+}
+.data-summary{
+  width: 1250px;
+  margin: 0 auto 0 auto;
+  height: 305px;
+  overflow: hidden;
+}
+#piechart{
+  display: inline-block;
+}
+#barchart{
+  display: inline-block;
+}
+</style>
+{% if updates %}
+<div class="warning">
+  <a class="view-changes" href="#">
+    <div class="message" >
+      {{ updates|length }} student status have been updated!..
+    </div>
+  </a>
+</div>
+{% endif %}
+
+{% if complete_loanbeneficiary %}
+<div class="warning">
+  <a class="view-changes" href="/university/view-complete">
+    <div class="message" >
+      {{ complete_loanbeneficiary|length }} students have completed their studies, confirm to removed them from the system!..
+    </div>
+  </a>
+</div>
+{% endif %}
+
+{% if beneficiaries %}
+<div class="data-summary">
+  <a id="beneficiarypiechartimg" href="" download="beneficiary_piechart_img.png"> <div id="piechart"></div> </a>
+  <a id="barchartimg" href="" download="barchartimg.png"> <div id="barchart"></div> </a>
+</div>
+<script type="text/javascript">
+google.charts.load('current', {'packages':['corechart']});
+google.charts.setOnLoadCallback(drawPieChart);
+
+function drawPieChart() {
+  var data = google.visualization.arrayToDataTable([
+  ['Task', 'Hours per Day'],
+  ['Continuous', {{continuous}}],
+  ['Discontinued', {{discontinued}}],
+  ['Postpone', {{postpone}}],
+  ['Complete', {{complete}}],
+]);
+
+var options = {
+     title: 'Beneficiaries Pie chart',
+     pieHole: 0.4,
+     width: 600,
+     height: 350,
+     slices: {0: {color: '#5cc44e'}, 1:{color: '#f44242'}, 2:{color: 'orange'}, 3:{color: '#02cccc'} },
+     titleTextStyle: {
+       color: '#212121',
+       fontName: "'Comfortaa', cursive",
+       fontSize: 16,
+       bold: false
+     }
+};
+var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+chart.draw(data, options);
+google.visualization.events.addListener(chart, 'ready', function () {
+    var imgUri = chart.getImageURI();
+    document.getElementById('beneficiarypiechartimg').href = imgUri;
+});
+}
+</script>
+
+<script language = "JavaScript">
+   google.charts.load('current', {'packages':['corechart']});
+   google.charts.setOnLoadCallback(function(){ drawBarChart({{continuous}}, {{discontinued}}, {{postpone}}, {{complete}}); });
+   function drawBarChart(continuous, discontinued, postponed, completed) {
+      var data = google.visualization.arrayToDataTable([
+        ['Status', 'State', { role: 'style' }, { role: 'annotation' }],
+        ['Continuous',  continuous, 'color: #5cc44e', continuous],
+        ['Discontinued', discontinued, 'color: #f44242', discontinued],
+        ['Postponed', postponed, 'color: orange', postponed],
+        ['Completed', completed, 'color: #02cccc', completed],
+      ]);
+
+      var options = {
+           title: 'Beneficiaries Bar Chart',
+           width: 600,
+           height: 350,
+           colors: ['#02cccc'],
+           legend: { position: 'none', maxLines: 3 },
+           titleTextStyle: {
+             color: '#212121',
+             fontName: "'Comfortaa', cursive",
+             fontSize: 16,
+             bold: false
+           }
+         };
+
+      var chart = new google.visualization.ColumnChart(document.getElementById('barchart'));
+      chart.draw(data, options);
+      google.visualization.events.addListener(chart, 'ready', function () {
+          var imgUri = chart.getImageURI();
+          document.getElementById('barchartimg').href = imgUri;
+      });
+   }
+</script>
+  <div class="beneficiary-data">
+    <table>
+      <tr style="background-color: #02cccc;">
+        <th>First Name</th>
+        <th>Middle Name</th>
+        <th>Last Name</th>
+        <th>Registration Number</th>
+        <th>Form4 Index Number</th>
+        <th>Status</th>
+      </tr>
+      {% for row in beneficiaries %}
+      <tr>
+        <td>{{row.first_name}}</td>
+        <td>{{row.middle_name}}</td>
+        <td>{{row.last_name}}</td>
+        <td>{{row.reg_no}}</td>
+        <td>{{row.form_four_index_no}}</td>
+        <td style="color:
+        {% if row.status == 'discontinued' %} red;
+        {% elif row.status == 'postponed'  %} gray;
+        {% elif row.status == 'continuous'  %} green;
+        {% elif row.status == 'completed'  %} orange;
+        {% else %} black;
+        {% endif %}">{{row.status}}</td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+  {% with page=beneficiaries %}
+  {% include "pagination.html" %}
+  {% endwith %}
+{% else %}
+<div class="warning">
+  <div class="message" > Sorry, There is no records for loan beneficiaries!.. </div>
+</div>
+{% endif %}
+
+{% endblock %}

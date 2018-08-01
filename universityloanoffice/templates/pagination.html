@@ -1,0 +1,30 @@
+<style media="screen">
+  .pagination{
+    text-align: center;
+    margin: 20px auto 0 0;
+  }
+  .pagination a{
+    color: #18BC9C;
+    text-decoration: none;
+    padding: 0 10px 0 10px;
+  }
+</style>
+<div class="pagination">
+  <span class="step-links">
+      {% if page.has_previous %}
+          <a href="?page=1"> <i class="fa fa-angle-double-left"></i> first</a>
+          <a href="?page={{ page.previous_page_number }}">prev</a>
+      {% endif %}
+
+      {% if page.paginator.num_pages != 1  %}
+      <span class="current">
+          Page {{ page.number }} of {{ page.paginator.num_pages }}.
+      </span>
+      {% endif %}
+
+      {% if page.has_next %}
+          <a href="?page={{ page.next_page_number }}">next</a>
+          <a href="?page={{ page.paginator.num_pages }}">last <i class="fa fa-angle-double-right"></i> </a>
+      {% endif %}
+  </span>
+</div>

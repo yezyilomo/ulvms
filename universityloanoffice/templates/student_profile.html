@@ -1,0 +1,110 @@
+{% extends "loanofficer_base.html" %}
+
+{% block title %}Student Profile{% endblock %}
+
+
+{% block content %}
+<style media="screen">
+.info-contents{
+  margin-left: auto;
+  margin-right: auto;
+  margin: 25px 20px 5px 20px;
+}
+.std-info, .loan-info{
+  max-width: 800px;
+}
+.std-info, .loan-info{
+  margin-bottom: 40px;
+}
+
+.header{
+  background-color: gray;
+  text-align: left;
+}
+.header span{
+  font-size: 1.2em;
+  line-height: 2.2;
+  margin-left: 5px;
+}
+.loan-info, .std-info, .news{
+  border-style: solid;
+  border-width: 0px;
+  border-bottom-width: 1px;
+  border-bottom-color: gray;
+}
+
+.info-list{
+  padding: 0;
+  margin: 0;
+}
+
+.info-list li{
+  list-style: none;
+  padding: 10px 0 10px 10px;
+}
+.info-contents li:nth-child(even) {
+    background-color: #dddddd;
+}
+
+.info-list li span{
+  float: right;
+  margin-right: 10px;
+}
+
+.warning{
+  margin-top: 50px;
+}
+.message{
+  padding: 25px 0 20px 0;
+  background-color: gray;
+  margin: 0 auto 0 auto;
+  width: 70%;
+  border-width: 0;
+  border-radius: 5px;
+  text-align: center;
+}
+</style>
+{% if student and loanbeneficiary %}
+<div class="info-contents">
+  <div class="std-info">
+
+    <div class="header">
+      <span>Student Information</span>
+    </div>
+
+    <div class="std-contents">
+      <ul class="info-list">
+        <li>Name: <span>{{student.first_name}} {{student.last_name}}</span> </li>
+        <li>Registration #: <span>{{student.reg_no}}</span> </li>
+        <li>Degree Programme: <span>{{student.programe_name.programe_name}}</span> </li>
+        <li>College: <span>{{student.programe_name.college_name.college_name}}</span> </li>
+        <li>Year Of Study: <span> {{student.year_of_study}} </span> </li>
+        <li>Tuition fee: <span>{{student.programe_name.tuition_fee}}/= TZS</span> </li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="loan-info">
+    <div class="header">
+      <span>Loan Information</span>
+    </div>
+    <div class="loan-contents">
+      <ul class="info-list">
+        <li>Tuition fee: <span>{{loanbeneficiary.tuition_fee}}/= TZS</span> </li>
+        <li>Accomodation: <span>{{loanbeneficiary.accomodation}}/= TZS</span> </li>
+        <li>Bank A/C: <span>{{loanbeneficiary.account_no}} {{loanbeneficiary.bank_name}}</span> </li>
+        <li>Special Faculty: <span>{{loanbeneficiary.special_faculty}}/= TZS</span> </li>
+        <li>Field: <span>{{loanbeneficiary.field}}/= TZS</span> </li>
+        <li>Final Project/Research: <span>{{loanbeneficiary.project_and_research}}/= TZS</span> </li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+{% else %}
+<div class="warning">
+  <div class="message" > Sorry, There is no record for your search!.. </div>
+</div>
+{% endif %}
+{% endblock %}
