@@ -4,7 +4,6 @@
 
 {% block content %}
 <style media="screen">
-
   .widget{
     margin: 20px 20px 50px 20px;
     min-height: 85vh;
@@ -13,7 +12,17 @@
     overflow: hidden;
     display: inline-block;
     float: left;
+    animation-name: show-data-summary;
+    animation-duration: 1s;
+    animation-delay: 0.3s;
+    animation-iteration-count: 1;
+    opacity: 0;
+    animation-fill-mode: forwards;
   }
+@keyframes show-data-summary {
+  0%{opacity: 0}
+  100%{opacity: 1}
+}
   .header i{
     float: right;
     font-size: 1.2em;
@@ -49,8 +58,15 @@
     transition-duration: 1s;
     font-family: 'Raleway', sans-serif;
   }
-  .widget li a:hover{
-    color: #eeee;
+  .widget li a:hover .list-st{
+    animation-name: list;
+    animation-duration: 01s;
+    animation-fill-mode: forwards;
+  }
+
+  @keyframes list {
+    0%{color: gray;}
+    100%{color: white;}
   }
   .widget .list-st{
     position: relative;
@@ -62,6 +78,12 @@
   .data-summary{
     display: inline-block;
     float: left;
+    animation-name: show-data-summary;
+    animation-duration: 2s;
+    animation-delay: 1s;
+    animation-iteration-count: 1;
+    opacity: 0;
+    animation-fill-mode: forwards;
   }
 </style>
 {% with list_style="⭘"  solid_list_style="▶▷" %}

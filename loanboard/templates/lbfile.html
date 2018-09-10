@@ -11,26 +11,39 @@
   table {
     font-family: arial, sans-serif;
     border-collapse: collapse;
+    border-width: 0;
+    border-bottom-width: 1px;
+    border-style: solid;
+    border-color: #02cccc;
     width: 100%;
   }
 
-  td, th {
-    border: 1px solid gray;
+  td {
     text-align: left;
-    padding: 8px;
+    padding: 8px 8px 8px 8px;
   }
 
-  tr:nth-child(even) {
+  th{
+    text-align: left;
+    padding: 10px 0 10px 8px;
+  }
+
+  tr:nth-child(odd) {
     background-color: #dddddd;
   }
 
-  td a{
-      color: #18BC9C;
+  td span{
+      cursor: pointer;
+      display: block;
+      padding: 8px;
   }
   </style>
   <div class="file-contents">
+    <div class="" style="text-align: center; margin: 10px 0 10px 0; font-size: 1.1em;">
+       {{filename}}
+    </div>
     <table>
-      <tr style="background-color: #02cccc;">
+      <tr>
         {% for head in data.0 %}
         <th>{{ head }}</th>
         {% endfor %}

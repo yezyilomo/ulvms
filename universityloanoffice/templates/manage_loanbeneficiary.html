@@ -72,7 +72,11 @@ td a{
 <div class="warning">
   <a class="view-changes" href="/university/view-complete">
     <div class="message" >
-      {{ complete_loanbeneficiary|length }} students have completed their studies, confirm to removed them from the system!..
+      {% if complete_loanbeneficiary|length == 1 %}
+        {{ complete_loanbeneficiary|length }} student has completed his studies, confirm to removed him from the system!..
+      {% else %}
+        {{ complete_loanbeneficiary|length }} students have completed their studies, confirm to removed them from the system!..
+      {% endif %}
     </div>
   </a>
 </div>
@@ -154,7 +158,7 @@ google.visualization.events.addListener(chart, 'ready', function () {
 </script>
   <div class="beneficiary-data">
     <table>
-      <tr style="background-color: #02cccc;">
+      <tr>
         <th>First Name</th>
         <th>Middle Name</th>
         <th>Last Name</th>

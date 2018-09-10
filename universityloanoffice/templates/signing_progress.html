@@ -7,6 +7,12 @@
   <style media="screen">
   .file-contents{
     margin: 20px 10px 0 10px;
+    animation-name: show-data-summary;
+    animation-duration: 2s;
+    animation-delay: 1.5s;
+    animation-iteration-count: 1;
+    opacity: 0;
+    animation-fill-mode: forwards;
   }
   table {
     font-family: arial, sans-serif;
@@ -56,7 +62,7 @@
 <div class="file-contents">
 <table id="tbl">
   {% if data %}
-  <tr style="background-color: #02cccc;">
+  <tr>
     <th>First Name</th>
     <th>Last Name</th>
     <th>Registration No</th>

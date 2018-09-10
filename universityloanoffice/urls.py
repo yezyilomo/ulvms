@@ -39,5 +39,4 @@ urlpatterns = [
     path('web-notf-configuration/', views.web_notf_configuration),
     path('configure-web-notf', views.configure_web_notf),
     path('send-email/', views.send_massmail),
-    path('graphs/', views.graphs),
 ]

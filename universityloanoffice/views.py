@@ -280,6 +280,7 @@ def showfile(request, file_name):
     data=excel_data(file_path)
     templete_data={
     'data':data,
+    'filename': file_name.split("/")[1],
     }
     return render(request, 'unifile.html', templete_data)
 
@@ -760,17 +761,3 @@ def configure_web_notf(request):
         for line in email_content.splitlines():
             f.write("<span>" + line + "</span> <br>")
     return redirect("/university/web-notf-configuration")
-
-@permit_uloanofficer
-@login_required
-def graphs(request):
-    data=SigningSession.objects.all().order_by("student")
-    signed_num=SigningSession.objects.filter(status='signed').count()
-    unsigned_num=SigningSession.objects.filter(status='unsigned').count()
-    data = paginate(data, 10, request)
-    templete_data={
-    'data': data,
-    'signed_num': signed_num,
-    'unsigned_num': unsigned_num,
-    }
-    return render(request, 'graphs.html', templete_data )

@@ -7,6 +7,12 @@
   .aggregate-info{
     margin-top: 30px;
     text-align: center;
+    animation-name: show-data-summary;
+    animation-duration: 1.3s;
+    animation-delay: 0.2s;
+    animation-iteration-count: 1;
+    opacity: 0;
+    animation-fill-mode: forwards;
   }
   .aggregate-info div{
     margin: 0 20px 10px 20px;
@@ -49,8 +55,15 @@
     transition-duration: 1s;
     font-family: 'Raleway', sans-serif;
   }
-  .widget li a:hover{
-    color: #eeee;
+  .widget li a:hover .list-st{
+    animation-name: list;
+    animation-duration: 01s;
+    animation-fill-mode: forwards;
+  }
+
+  @keyframes list {
+    0%{color: gray;}
+    100%{color: white;}
   }
   .widget .list-st{
     position: relative;

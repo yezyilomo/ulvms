@@ -134,13 +134,13 @@ def send_beneficiaries(request):
 @login_required
 def showfile(request, file_name):
     fs = FileSystemStorage('loanboard/files')
-    file_name=fs.path('')+'/'+file_name
-    fl=pyexcel.get_book_dict(file_name=file_name)
+    file_path=fs.path('')+'/'+file_name
+    fl=pyexcel.get_book_dict(file_name=file_path)
     data=None
     for sheet in fl:
         if isinstance(fl[sheet], list):
                data=fl[sheet]
-    return render(request, 'lbfile.html', {'data':data})
+    return render(request, 'lbfile.html', {'data':data, 'filename': file_name})
 
 @permit_lbloanofficer
 @login_required
