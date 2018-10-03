@@ -30,7 +30,7 @@
 }
 .actions li a{
   text-decoration: none;
-  color: #eeee;
+  color: #eeeeee;
   display: block;
   padding: 15px 0 15px 0;
 }
@@ -82,7 +82,6 @@ td a{
       <th>First Name</th>
       <th>Last Name</th>
       <th>Registration Number</th>
-      <th>Form4 Index Number</th>
       <th>Beneficiary Status</th>
       <th>Action</th>
     </tr>
@@ -91,7 +90,6 @@ td a{
       <td>{{row.1.first_name}}</td>
       <td>{{row.1.last_name}}</td>
       <td>{{row.1.reg_no}}</td>
-      <td>{{row.0.form_four_index_no}}</td>
       <td style="color: red;">{{row.0.status}}</td>
       <td><a href="/university/loanbeneficiary/delete/{{row.0.reg_no}}">Remove</a></td>
     </tr>

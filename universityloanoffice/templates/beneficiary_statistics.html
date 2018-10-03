@@ -5,17 +5,19 @@
 }
 #pchart{
   display: inline-block;
-  padding-right: 25px;
-  padding-left: 25px;
 }
 #bchart{
   display: inline-block;
-  padding-right: 25px;
-  padding-left: 25px;
+}
+.sprt{
+  width: 200px;
+  height: 5px;
+  display: inline-block;
 }
 </style>
 <div class="statistics-summary">
   <a id="pchartimg" href="" download="beneficiary_piechart_img.png"> <div id="pchart"></div> </a>
+  <span class="sprt"></span>
   <a id="bchartimg" href="" download="barchartimg.png"> <div id="bchart"></div> </a>
 </div>
 <script type="text/javascript">
@@ -34,7 +36,7 @@ function drawPChart() {
 var options = {
      title: 'Beneficiaries Pie chart',
      pieHole: 0.4,
-     width: 600,
+     width: 500,
      height: 350,
      legend: { position: 'right', alignment: 'start' },
      slices: {0: {color: '#5cc44e'}, 1:{color: '#f44242'}, 2:{color: 'orange'}, 3:{color: '#02cccc'} },
@@ -68,7 +70,7 @@ google.visualization.events.addListener(chart, 'ready', function () {
 
       var options = {
            title: 'Beneficiaries Bar Chart',
-           width: 600,
+           width: 500,
            height: 350,
            colors: ['#02cccc'],
            legend: { position: 'none', maxLines: 3 },
