@@ -14,40 +14,39 @@ from django.contrib.auth import authenticate, login, logout
 from django.core.files.storage import FileSystemStorage
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
-from django.contrib.staticfiles.views import serve
 from django.core.exceptions import PermissionDenied
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from django.views.decorators.csrf import csrf_exempt
-from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.core.paginator import Paginator
 from django.http import JsonResponse
 from universityloanoffice.models import User
 from student import views as student
 from loanboard import views as loanboard
 from universityloanoffice.models import Student as Loanbeneficiary
 from universityloanoffice.models import SigningSession
-from aris.models import Student, College, Degree;
+from aris.models import Student, College, Degree
 
 
 ################### Filling data backup ################################################
 def filldata(request):
-    filldata1() #Fill Colleges
-    filldata2() #Fill Course
-    filldata3() #Fill Students
-    #filldata4()
-    filldata5()  #Fill users
+    filldata1()  # Fill Colleges
+    filldata2()  # Fill Course
+    filldata3()  # Fill Students
+    # filldata4()
+    filldata5()  # Fill users
     requests.get("http://127.0.0.1:8000/loanboard/fill-data/")
     return HttpResponse("Data filled successfully!")
 
 def filldata4():
     fs = FileSystemStorage('universityloanoffice/files')
-    file_name=fs.path('')+'/'+'data2.xls'
-    fl=pyexcel.iget_records(file_name=file_name)
-    loanbeneficiary=None;
+    file_name = fs.path('') + '/' + 'data2.xls'
+    fl = pyexcel.iget_records(file_name=file_name)
+    loanbeneficiary = None
     for record in fl:
         if record['Registration Number'] != "" and not Loanbeneficiary.objects.filter(reg_no=record['Registration Number']):
-            loanbeneficiary=Loanbeneficiary(
+            loanbeneficiary = Loanbeneficiary(
                 reg_no=record['Registration Number'],
                 form_four_index_no=record['F4Index'],
                 status=Student.objects.get(reg_no=record['Registration Number']).status,
@@ -62,14 +61,16 @@ def filldata4():
             loanbeneficiary.save()
     return True
 
+
 def filldata3():
+    """Fill data in."""
     fs = FileSystemStorage('universityloanoffice/files')
-    file_name=fs.path('')+'/'+'data.xls'
-    fl=pyexcel.iget_records(file_name=file_name)
-    university_student=None;
+    file_name = fs.path('') + '/' + 'data.xls'
+    fl = pyexcel.iget_records(file_name=file_name)
+    university_student = None
     for record in fl:
         if record['Registration Number'] != "" and not Student.objects.filter(reg_no=record['Registration Number']):
-            university_student=Student(
+            university_student = Student(
                 reg_no=record['Registration Number'],
                 first_name=record['First Name'],
                 middle_name=record['Middle Name'],
@@ -85,9 +86,9 @@ def filldata3():
 
 def filldata2():
     fs = FileSystemStorage('universityloanoffice/files')
-    file_name=fs.path('')+'/'+'data.xls'
+    file_name=fs.path('') + '/' + 'data.xls'
     fl=pyexcel.iget_records(file_name=file_name)
-    degree=None;
+    degree=None
     for record in fl:
         if record['Course'] != "" and not Degree.objects.filter(programe_name=record['Course']):
             degree=Degree(
@@ -100,12 +101,12 @@ def filldata2():
 
 def filldata1():
     fs = FileSystemStorage('universityloanoffice/files')
-    file_name=fs.path('')+'/'+'data.xls'
-    fl=pyexcel.iget_records(file_name=file_name)
-    college=None;
+    file_name = fs.path('') + '/' + 'data.xls'
+    fl = pyexcel.iget_records(file_name=file_name)
+    college = None
     for record in fl:
         if record['College'] != "" and not College.objects.filter(college_name=record['College']):
-            college=College(
+            college = College(
                 college_name=record['College'],
             )
             print(record['Course'])
@@ -114,6 +115,7 @@ def filldata1():
 ################################### End of data filling #############################################
 
 ############################### Creating all important users ############################################
+
 def create_user(*args):
     user=User.objects.create_user(args[0], args[1], args[2])
     user.role=args[3]
@@ -134,8 +136,8 @@ def filldata5():
     students=Loanbeneficiary.objects.all()
     for std in students:
         std=Student.objects.filter(reg_no=std.reg_no)
-        create_user(std.get().reg_no, std.get().first_name+"@"+'gmail.com', 'studentpassword', 'student')
-    return True;
+        create_user(std.get().reg_no, std.get().first_name + "@" + 'gmail.com', 'studentpassword', 'student')
+    return True
 ################################### End of creating users #################################################
 
 def permit_uloanofficer(function):
@@ -204,7 +206,7 @@ def profile(request):
         notification=0
         for file in files:
             if file.startswith('New_'):
-                notification+=1
+                notification +=1
 
         data=SigningSession.objects.all()
         signed_num=SigningSession.objects.filter(status='signed').count()
@@ -249,7 +251,7 @@ def notifications(request):
         notification=0
         for fl in files:
             if fl.name.startswith('New_'):
-                os.rename(fl, fs.path('')+'/'+fs.get_available_name(fl.name[4:]) )
+                os.rename(fl, fs.path('') + '/' + fs.get_available_name(fl.name[4:]) )
 
         files=filter(
         lambda a: not a.name.startswith(".") and a.is_file(),
@@ -276,7 +278,7 @@ def excel_data(file_path):
 @login_required
 def showfile(request, file_name):
     fs = FileSystemStorage('universityloanoffice/files/')
-    file_path=fs.path('')+'/'+file_name
+    file_path=fs.path('') + '/' + file_name
     data=excel_data(file_path)
     templete_data={
     'data':data,
@@ -292,7 +294,7 @@ def searchstudent(request):
         try:
             student=Student.objects.get(reg_no=reg_no)
             loanbeneficiary=Loanbeneficiary.objects.get(reg_no=reg_no)
-        except Exception as e:
+        except Exception:
             student=False
             loanbeneficiary=False
         templete_data={
@@ -334,13 +336,13 @@ def sign(request):
     reg_no=request.POST['barcode_id']
     try:
         c_std=Student.objects.get(reg_no=reg_no)
-        std_name=c_std.first_name+"  "+c_std.middle_name+"  "+c_std.last_name
-    except Exception as e:
+        std_name=c_std.first_name + "  " + c_std.middle_name + "  " + c_std.last_name
+    except Exception:
         std_name=""
     try:
         record=SigningSession.objects.get(student=Loanbeneficiary.objects.get(reg_no=reg_no))
 
-    except Exception as e:
+    except Exception:
         response=JsonResponse({'message': 'Sorry you are not allowed to sign', 'reg_no': reg_no, 'name': std_name})
         return response
 
@@ -360,14 +362,14 @@ def import_for_signing(request, file_name):
         raise Exception("Export first before importing!...")
 
     fs = FileSystemStorage('universityloanoffice/files/signing')
-    file_name=fs.path('')+'/'+file_name
+    file_name=fs.path('') + '/' + file_name
     fl=pyexcel.iget_records(file_name=file_name)
     for record in fl:
         if record['Registration Number'] != "":
             try:
                 std=Loanbeneficiary.objects.get(reg_no=record['Registration Number'])
                 signature_id=Student.objects.get(reg_no=record['Registration Number'])
-            except Exception as e:
+            except Exception:
                 continue
             session=SigningSession(student=std, signature_id=signature_id, status='unsigned')
             session.save()
@@ -407,10 +409,10 @@ def export_file(export_criteria):
 
     file_name='universityloanoffice/files/exported/emptyfile.xls'
     sheet = pyexcel.get_sheet(file_name=file_name, name_columns_by_row=0)
-    sheet.row += ['First Name', 'Middle Name', 'Last Name', 'Registration Number', 'Bank Account Number', 'Bank Name', 'Amount']
+    sheet.row  += ['First Name', 'Middle Name', 'Last Name', 'Registration Number', 'Bank Account Number', 'Bank Name', 'Amount']
     for std in req_data:
         stdnt=std.signature_id
-        sheet.row += [
+        sheet.row  += [
             stdnt.first_name,
             stdnt.middle_name,
             stdnt.last_name,
@@ -428,7 +430,7 @@ def export_signed(request):
     if not export_file('signed'):
         raise("Error during export!..")
     fs = FileSystemStorage('universityloanoffice/files/exported')
-    file_full_path=fs.path('')+'/'+'exported_sheet.xls'
+    file_full_path=fs.path('') + '/' + 'exported_sheet.xls'
     return serve_file(file_full_path)
 
 @permit_uloanofficer
@@ -437,7 +439,7 @@ def export_unsigned(request):
     if not export_file('unsigned'):
         raise("Error during export!..")
     fs = FileSystemStorage('universityloanoffice/files/exported')
-    file_full_path=fs.path('')+'/'+'exported_sheet.xls'
+    file_full_path=fs.path('') + '/' + 'exported_sheet.xls'
     return serve_file(file_full_path)
 
 @permit_uloanofficer
@@ -446,7 +448,7 @@ def export_all(request):
     if not export_file('all'):
         raise("Error during export!..")
     fs = FileSystemStorage('universityloanoffice/files/exported')
-    file_full_path=fs.path('')+'/'+'exported_sheet.xls'
+    file_full_path=fs.path('') + '/' + 'exported_sheet.xls'
     return serve_file(file_full_path)
 
 @permit_uloanofficer
@@ -472,9 +474,9 @@ def send_updates(request):
     req_data=Student.objects.filter(reg_no__in=reg_nos)
     file_name='universityloanoffice/files/exported/emptyfile.xls'
     sheet = pyexcel.get_sheet(file_name=file_name, name_columns_by_row=0)
-    sheet.row += ['First Name', 'Middle Name', 'Last Name', 'Registration Number', 'Form 4 Index Number', 'Status']
+    sheet.row  += ['First Name', 'Middle Name', 'Last Name', 'Registration Number', 'Form 4 Index Number', 'Status']
     for stdnt in req_data:
-        sheet.row += [
+        sheet.row  += [
             stdnt.first_name,
             stdnt.middle_name,
             stdnt.last_name,
@@ -483,7 +485,7 @@ def send_updates(request):
             stdnt.status,
         ]
     fs = FileSystemStorage('loanboard/files')
-    sheet.save_as("loanboard/files/"+fs.get_available_name("New_exported_sheet.xls") )
+    sheet.save_as("loanboard/files/" + fs.get_available_name("New_exported_sheet.xls") )
     return render(request, 'file_sending_response.html')
 
 def paginate(data, page_num, request):
@@ -511,19 +513,19 @@ def status_changes():
     loanbeneficiary=Loanbeneficiary.objects.all()
     for std in loanbeneficiary:
         if std.status != Student.objects.get(reg_no=std.reg_no).status:
-            list_to_be_updated.append( ( std, Student.objects.get(reg_no=std.reg_no) ) ) #Loanbeneficiary_info, Student_info
+            list_to_be_updated.append( ( std, Student.objects.get(reg_no=std.reg_no) ) ) # Loanbeneficiary_info, Student_info
     return list_to_be_updated
 
 @permit_uloanofficer
 @login_required
 def manage_loanbeneficiary(request):
-    complete_loanbeneficiary=Loanbeneficiary.objects.filter(status="completed")
-    reg_nos=Loanbeneficiary.objects.all().values_list('reg_no')
-    req_data=Student.objects.filter(reg_no__in=reg_nos)
-    continuous=Loanbeneficiary.objects.filter(status="continuous").count()
-    discontinued=Loanbeneficiary.objects.filter(status="discontinued").count()
-    postpone=Loanbeneficiary.objects.filter(status="postponed").count()
-    complete=complete_loanbeneficiary.count()
+    complete_loanbeneficiary = Loanbeneficiary.objects.filter(status="completed")
+    reg_nos = Loanbeneficiary.objects.all().values_list('reg_no')
+    req_data = Student.objects.filter(reg_no__in=reg_nos)
+    continuous = Loanbeneficiary.objects.filter(status="continuous").count()
+    discontinued = Loanbeneficiary.objects.filter(status="discontinued").count()
+    postpone = Loanbeneficiary.objects.filter(status="postponed").count()
+    complete = complete_loanbeneficiary.count()
     req_data = paginate(req_data, 10, request)
 
     templete_data={
@@ -536,7 +538,7 @@ def manage_loanbeneficiary(request):
     'complete': complete,
     }
     update_status(request, 'all')
-    #delete_students_with_complete_status(request, 'all')
+    # delete_students_with_complete_status(request, 'all')
     return render(request, 'manage_loanbeneficiary.html', templete_data)
 
 @permit_uloanofficer
@@ -577,7 +579,7 @@ def complete():
     loanbeneficiary=Loanbeneficiary.objects.filter(status="completed")
     for std in loanbeneficiary:
         if std.status == Student.objects.get(reg_no=std.reg_no).status:
-            list_to_be_deleted.append( ( std, Student.objects.get(reg_no=std.reg_no) ) ) #Loanbeneficiary_info, Student_info
+            list_to_be_deleted.append( ( std, Student.objects.get(reg_no=std.reg_no) ) ) # Loanbeneficiary_info, Student_info
     return list_to_be_deleted
 
 @permit_uloanofficer
@@ -625,7 +627,7 @@ def view_initial_import(request):
 @login_required
 def show_initial_file(request, file_name):
     fs = FileSystemStorage('universityloanoffice/files/initial')
-    file_path=fs.path('')+'/'+file_name
+    file_path=fs.path('') + '/' + file_name
     data=excel_data(file_path)
     templete_data={
     'data':data,
@@ -636,9 +638,9 @@ def show_initial_file(request, file_name):
 @login_required
 def import_initial_beneficiaries(request, file_name):
     fs = FileSystemStorage('universityloanoffice/files/initial')
-    file_path=fs.path('')+'/'+file_name
+    file_path=fs.path('') + '/' + file_name
     fl=pyexcel.iget_records(file_name=file_path)
-    loanbeneficiary=None;
+    loanbeneficiary=None
     for record in fl:
         if Student.objects.filter(reg_no=record['Registration Number']) and not Loanbeneficiary.objects.filter(reg_no=record['Registration Number']):
             loanbeneficiary=Loanbeneficiary(
@@ -655,7 +657,7 @@ def import_initial_beneficiaries(request, file_name):
             )
             loanbeneficiary.save()
     if file_name.startswith("New_"):
-        os.rename(file_path, fs.path('')+'/'+fs.get_available_name(file_name[4:]) )
+        os.rename(file_path, fs.path('') + '/' + fs.get_available_name(file_name[4:]) )
     return redirect("/university/inital-import-status")
 
 @csrf_exempt
@@ -664,31 +666,31 @@ def receive_barcode(request):
         print("This page accept only POST requests!...")
         return HttpResponse("Invalid request method!...")
 
-    barcode_id=request.POST['barcode_id']
-    current_time=request.POST['current_time']
+    barcode_id = request.POST['barcode_id']
+    current_time = request.POST['current_time']
     print("********************")
-    print("Scanned barcode is:   "+barcode_id)
-    print("Time to scan barcode is:  "+current_time)
+    print("Scanned barcode is:   " + barcode_id)
+    print("Time to scan barcode is:  " + current_time)
     print("********************")
     return HttpResponse("Sent")
 
 def ajax(request):
     fs = FileSystemStorage('universityloanoffice/files/signing')
-    file_names=fs.listdir('')[1]
-    notification=len( list( filter(lambda a: a.startswith("New_"), file_names) ) )
+    file_names = fs.listdir('')[1]
+    notification = len( list( filter(lambda a: a.startswith("New_"), file_names) ) )
     return HttpResponse(notification)
 
 @permit_uloanofficer
 @login_required
 def get_signing_status(request, reg_no):
-    record=SigningSession.objects.get(student=Loanbeneficiary.objects.get(reg_no=reg_no))
+    record = SigningSession.objects.get(student=Loanbeneficiary.objects.get(reg_no=reg_no))
     return HttpResponse(record.status)
 
 
 def get_signing_progress(request):
-    signed_num=SigningSession.objects.filter(status='signed').count()
-    unsigned_num=SigningSession.objects.filter(status='unsigned').count()
-    templete_data={
+    signed_num = SigningSession.objects.filter(status='signed').count()
+    unsigned_num = SigningSession.objects.filter(status='unsigned').count()
+    templete_data = {
     'signed_num': signed_num,
     'unsigned_num': unsigned_num,
     }
@@ -697,11 +699,11 @@ def get_signing_progress(request):
 @permit_uloanofficer
 @login_required
 def generate_barcode(request):
-    stds=SigningSession.objects.all().values_list('student')
+    stds = SigningSession.objects.all().values_list('student')
     print(stds)
     for i, std in enumerate(stds):
-        bc=barcode.get('code128', std[0])
-        bc.save("/home/yezy/Desktop/.security/sss/barcode"+str(i))
+        bc = barcode.get('code128', std[0])
+        bc.save("/home/yezy/Desktop/.security/sss/barcode" + str(i))
     return HttpResponse("All barcodes generated!..")
 
 def smtp_server(host, email, password, port):
@@ -714,13 +716,13 @@ def smtp_server(host, email, password, port):
     return server
 
 def send_email(frm, to, subject, message):
-    server=smtp_server('smtp.live.com', 'yezileliilomo@hotmail.com', '1234yezy', 587)
+    server = smtp_server('smtp.live.com', 'yezileliilomo@hotmail.com', '1234yezy', 587)
     msg = MIMEMultipart()
     msg['From'] = frm
     msg['Subject'] = subject
     msg.attach(MIMEText(message, 'html'))
     for destination in to:
-        msg['To']=destination
+        msg['To'] = destination
         server.sendmail(msg['From'], msg['To'], msg.as_string())
     server.quit()
 
@@ -734,30 +736,30 @@ def send_massmail(request):
 @login_required
 def email_configuration(request):
     with open("universityloanoffice/files/notifications/email", "r") as f:
-        email_content=f.read()
+        email_content = f.read()
         return render(request, "email_configuration.html", {'current_content': email_content} )
 
 @permit_uloanofficer
 @login_required
 def configure_email(request):
-    email_content=request.POST['email_content']
+    email_content = request.POST['email_content']
     with open("universityloanoffice/files/notifications/email", "w") as f:
         for line in email_content.splitlines():
-            f.write("<span>" + line + "</span> <br>")
+            f.write("<span>"  +  line  +  "</span> <br>")
     return redirect("/university/email-configuration")
 
 @permit_uloanofficer
 @login_required
 def web_notf_configuration(request):
     with open("universityloanoffice/files/notifications/web_notification", "r") as f:
-        web_notification=f.read()
+        web_notification = f.read()
     return render(request, "web_notf_configuration.html", {'current_content': web_notification} )
 
 @permit_uloanofficer
 @login_required
 def configure_web_notf(request):
-    email_content=request.POST['web_notification']
+    email_content = request.POST['web_notification']
     with open("universityloanoffice/files/notifications/web_notification", "w") as f:
         for line in email_content.splitlines():
-            f.write("<span>" + line + "</span> <br>")
+            f.write("<span>"  +  line  +  "</span> <br>")
     return redirect("/university/web-notf-configuration")

@@ -13,7 +13,7 @@ from universityloanoffice.models import User
 from loanboard.models import Beneficiary
 from universityloanoffice.models import Student as Loanbeneficiary
 from universityloanoffice.models import SigningSession
-from aris.models import Student, College, Degree;
+from aris.models import Student, College, Degree
 
 # Create your views here.
 
@@ -21,7 +21,7 @@ def filldata(request):
     fs = FileSystemStorage('loanboard/files')
     file_name=fs.path('')+'/'+'beneficiaries.xls'
     fl=pyexcel.iget_records(file_name=file_name)
-    loanbeneficiary=None;
+    loanbeneficiary=None
     for record in fl:
         if record['Registration Number'] != "" and not Beneficiary.objects.filter(reg_no=record['Registration Number']):
             loanbeneficiary=Beneficiary(
@@ -192,13 +192,12 @@ def view_changes(request, file_name):
     fl=pyexcel.iget_records(file_name=file_name)
 
     list_to_be_updated=[]
-    loanbeneficiary=Beneficiary.objects.all()
     for std in fl:
         try:
             if std['Status'] != Beneficiary.objects.get(form_four_index_no=std['Form 4 Index Number']).status:
                 list_to_be_updated.append( ( Beneficiary.objects.get(reg_no=std['Registration Number']), std['Status'] ) )
-        except Exception as e:
-            continue;
+        except Exception:
+            continue
 
     list_to_be_updated=paginate(list_to_be_updated, 13, request)
 

@@ -139,5 +139,5 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TSL = True
 EMAIL_HOST = 'smtp.live.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'yezileliilomo@hotmail.com'
-EMAIL_HOST_PASSWORD = '1234yezy'
+EMAIL_HOST_USER = 'yezyilomo@gmail.com'
+EMAIL_HOST_PASSWORD = 'password'
